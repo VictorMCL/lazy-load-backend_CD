@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: "Deployment"
+metadata:
+  name: #{APP_NAME}-#{VERSION}
+  namespace: #{APP_NAME}
+  labels:
+    app: #{APP_NAME}
+    release: v#{VERSION}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: #{APP_NAME}
+      release: v#{VERSION}
+  template:
+    metadata:
+      labels:
+        app: #{APP_NAME}
+        release: v#{VERSION}
+    spec:
+      containers:
+      - name: #{APP_NAME}
+        image: #{DOCKER_HOST}/#{DOCKER_IMAGE}:#{VERSION}
+        env:
+        - name: API_SERVER
+          value: "http://localhost:9000"
+        ports:
+        - containerPort: 4200
+          protocol: TCP
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "250m"
+          limits:
+            memory: "300Mi"
+            cpu: "500m"  
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 4200
+          initialDelaySeconds: 3
+          periodSeconds: 3
