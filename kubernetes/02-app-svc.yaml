@@ -7,9 +7,9 @@ metadata:
     app: #{APP_NAME}
     env: #{DEPLOYMENT}
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     release: v#{VERSION}
   ports:
-    - port: 80
-      targetPort: 4200
+    - port: 9000
+      targetPort: 9000
